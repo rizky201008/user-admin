@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('alamat')->nullable();
             $table->string('tempat_lahir')->nullable();
             $table->date('tanggal_lahir')->nullable();
-            $table->unsignedBigInteger('id_agama');
+            $table->unsignedBigInteger('id_agama')->nullable();
             $table->string('foto_ktp')->nullable();
             $table->integer('umur')->nullable();
             $table->timestamps();
