@@ -20,14 +20,14 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Administrator',
                 'email' => 'admin@gmail.com',
-                'password' => Hash::make('123456'),
+                'password' => bcrypt('123456'),
                 'role' => 'Admin',
                 'is_aktif' => true
             ],
             [
                 'name' => 'User Account',
                 'email' => 'user@gmail.com',
-                'password' => Hash::make('123456'),
+                'password' => bcrypt('123456'),
                 'role' => 'User',
                 'is_aktif' => true
             ],

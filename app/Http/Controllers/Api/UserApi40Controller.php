@@ -7,6 +7,7 @@ use App\Models\DetailData;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserApi40Controller extends Controller
 {
@@ -74,9 +75,9 @@ class UserApi40Controller extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request)
+    public function show()
     {
-        $detail_user = DetailData::where('id_user', $request->user()->id)->first();
+        $detail_user = DetailData::where('id_user', request()->user()->id)->first();
         return response()->json(
             [
                 "message" => 'Success',
@@ -96,6 +97,9 @@ class UserApi40Controller extends Controller
     public function updatedetail(Request $request)
     {
         $detail_user = DetailData::where('id_user', $request->user()->id)->first();
+        if ($request->hasFile('foto_ktp')) {
+            $store = $request->foto_ktp->store('foto-ktp');
+        }
         try {
             $update = $detail_user->update(
                 [
@@ -103,7 +107,7 @@ class UserApi40Controller extends Controller
                     "tempat_lahir" => $request->tempat_lahir ?? null,
                     "tanggal_lahir" => $request->tanggal_lahir ?? null,
                     "id_agama" => $request->id_agama ?? null,
-                    "foto_ktp" => $request->foto_ktp ?? null,
+                    "foto_ktp" => $store ?? null,
                     "umur" => $request->umur ?? null
                 ]
             );
@@ -111,6 +115,7 @@ class UserApi40Controller extends Controller
                 return response()->json(
                     [
                         "message" => 'Success',
+                        "data"=>$detail_user
                     ],
                     200
                 );
@@ -137,7 +142,7 @@ class UserApi40Controller extends Controller
         );
         $update = $user->update(
             [
-                "password" => bcrypt($request->newpassword)
+                "password" => Hash::make($request->newpassword)
             ]
         );
         if ($update) {
@@ -179,7 +184,8 @@ class UserApi40Controller extends Controller
             if ($deleted) {
                 return response()->json(
                     [
-                        "message" => 'Success'
+                        "message" => 'Success',
+                        "data"=>$delete
                     ]
                 );
             } else {
@@ -197,14 +203,32 @@ class UserApi40Controller extends Controller
     {
         if ($request->hasFile('profile')) {
             $store = $request->profile->store('images');
-            return response()->json(
+            $select = User::find($request->user()->id)->first();
+            $update = $select->update(
                 [
-                    "message"=>'success',
-                    "data"=>$store
+                    "foto"=>"/storage/$store"
                 ]
             );
+            if ($update) {
+                return response()->json(
+                    [
+                        "message" => 'success',
+                        "data" =>$select
+                    ]
+                );
+            } else {
+                return response()->json(
+                    [
+                        "message" => 'failed'
+                    ]
+                );
+            }
         } else {
-            return "Konthil";
+            return response()->json(
+                [
+                    "message" => "File can't empty!!!"
+                ]
+            );
         }
     }
 }

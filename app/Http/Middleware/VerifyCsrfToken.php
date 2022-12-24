@@ -17,6 +17,11 @@ class VerifyCsrfToken extends Middleware
         '/update_detail40',
         '/update_password40',
         '/delete40',
-        '/read40'
+        '/register40',
+        '/admin/login40',
+        '/admin/create40',
+        '/admin/update40',
+        '/admin/delete40',
+        '/admin/approve-user40',
     ];
 }
