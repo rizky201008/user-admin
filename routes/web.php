@@ -6,8 +6,13 @@ use App\Http\Controllers\Auth40Controller;
 use App\Http\Controllers\Admin\User40Controller;
 use App\Http\Controllers\User\Profile40Controller;
 use App\Http\Controllers\Admin\Religion40Controller;
+use Illuminate\Support\Facades\Artisan;
 
 Route::get('/', [Home40Controller::class, 'index40'])->name('welcome40');
+Route::get('/slinks', function(){
+    Artisan::call("storage:link");
+    return "Linked!!!";
+});
 
 Route::group(['middleware' => ['guest']], function () { 
     Route::get('login40', [Auth40Controller::class, 'indexLogin40'])->name('login40');
